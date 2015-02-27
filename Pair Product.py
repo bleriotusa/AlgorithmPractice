@@ -1,4 +1,12 @@
 __author__ = 'Michael'
+'''
+Write to the standard output the greatest product of 2 numbers to be divisible by 3 from a given array of pozitive integers.
+Example input:
+6, 8, 8, 7, 2, 5
+Example output:
+48
+'''
+
 def max_prod(v):
     # Write your code here
     # To print results to the standard output you can use print
