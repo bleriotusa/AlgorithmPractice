@@ -32,6 +32,7 @@ def getNumberOfPrimes2(n):
 
     return [k for k, v in d.keys() if not v]
 
+
 def getNumberOfPrimes3(n):
 #     Let A be an array of Boolean values, indexed by integers 2 to n,
 # initially all set to true.
@@ -46,13 +47,14 @@ def getNumberOfPrimes3(n):
     B = [i for i in range(0, len(A)) if A[i]][2:]
     # print(B)
     return B
-
+p = (getNumberOfPrimes3(100))
+print(len(p), p)
 # Output: all i such that A[i] is true.
-# print(len(getNumberOfPrimes3(1000000)))
-l = []
-l.extend([4]*100000000)
-l.extend([5]*100000000)
-l.extend([6]*100000000)
+print(len(getNumberOfPrimes3(1000000)))
+# l = []
+# l.extend([4]*100000000)
+# l.extend([5]*100000000)
+# l.extend([6]*100000000)
 
 '''
 def find_diff(l):

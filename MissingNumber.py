@@ -20,4 +20,6 @@ def find_missing_number(v):
         checklist[num] = True
     for i in range(1, maxx+1):
         if not checklist[i]:
-            print i
+            print (i)
+
+find_missing_number([5,4,1,2])

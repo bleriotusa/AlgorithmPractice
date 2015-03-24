@@ -10,7 +10,26 @@ Explanation:
 2 + 6 + 3
 '''
 
+global index, value
+index = 0
+value = 1
 
+
+l = [2, 5, 6, 5, 3]
+def find_max_sum(v):
+    return find_max_sum_inner(enumerate(v))
+
+def find_max_sum_inner(l):
+    if not list(enumerate([])):
+        return 0
+    else:
+
+def consecutive_elements(left, mid, right):
+    return left[index] == mid[index] + 1 or mid[index] == right[index] - 1
+
+find_max_sum(l)
+
+''' # First attempts
 def find_max_sum(v):
     # Write your code here
     # To print results to the standard output you can use print
@@ -120,3 +139,4 @@ for sublist in find_max_sum4(list(enumerate(v2))):
 # print(find_max_sum3(v1))
 
 # print(find_max_sum([2, 5, 6, 5, 3]))
+'''

@@ -32,7 +32,7 @@ def merge_arrays(a, b):
 
         elif a[count_a] < b[count_b]:
             final_array.append(a[count_a])
-            print(a[count_a]),
+            print(a[count_a]),1000000
             count_a += 1
 
         else:
@@ -42,3 +42,10 @@ def merge_arrays(a, b):
 
         if count_a == len(a) and count_b == len(b):
             unsorted = False
+
+    return final_array
+
+a = [2, 3, 7, 8, 8]
+b = [7, 8, 13]
+
+print(merge_arrays(a, b))
