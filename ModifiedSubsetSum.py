@@ -16,18 +16,39 @@ value = 1
 
 
 l = [2, 5, 6, 5, 3]
+l2 = [3, 4, 1, -4, -2, 2, 4, 7, 10, 6]
 def find_max_sum(v):
-    return find_max_sum_inner(enumerate(v))
+    ans = find_max_sum_inner(list(enumerate(v)))
+    print([tup[1] for tup in ans])
+    print(sum([tup[1] for tup in ans]))
 
 def find_max_sum_inner(l):
-    if not list(enumerate([])):
-        return 0
+    if not l:
+        return []
+    elif len(l) == 1:
+        return l
     else:
+        prev_sol = find_max_sum_inner(l[:-1])
+        last_of_prev = prev_sol[-1]
+        next_prob = l[-1]
+        if next_prob[0] - last_of_prev[0] != 1:
+            return prev_sol + [l[-1]] if l[-1][1] > 0 else prev_sol
+        else:
+            if l[-1][1] > prev_sol[-1][1]:
+                #case 1 - 2 zeroes or behind last of prev
+                if len(l) == 3 or (len(l) > 3 and l[-4] not in prev_sol and l[-4][1] > 0):
+                    return prev_sol[:-1] + [l[-3], l[-1]]
+                else:
+                    return prev_sol[:-1] + [l[-1]]
+            else:
+                return prev_sol
+
+
 
 def consecutive_elements(left, mid, right):
     return left[index] == mid[index] + 1 or mid[index] == right[index] - 1
 
-find_max_sum(l)
+find_max_sum(l2)
 
 ''' # First attempts
 def find_max_sum(v):

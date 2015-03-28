@@ -72,7 +72,9 @@ class Illustrate_Recursive:
             if self._indent == 0:
                 print('Ending recursive illustration'+30*'-')
         return answer
-    
+
+def get_line():
+    return tuple(map(lambda num: int(num), input().strip().split(' ')))
 
 
 if __name__ == '__main__':
