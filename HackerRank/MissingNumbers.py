@@ -1,5 +1,5 @@
 __author__ = 'Michael'
-from decorators import get_line
+from HackerRank.decorators import get_line
 import sys
 from collections import defaultdict
 

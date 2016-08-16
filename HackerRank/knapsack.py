@@ -28,7 +28,7 @@ use the regular knapsack algorithm, then, for the case where a number is chosen 
  add a for loop to iterate through all the multiples of the chosen number until the multiple is greater than the weight
 '''
 
-from decorators import *
+from HackerRank.decorators import *
 import sys
 
 class TailRecurseException(BaseException):

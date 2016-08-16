@@ -41,7 +41,7 @@ There is no common subsequence with length larger than 3. And "1 2 3", "1 2 1", 
 
 """
 
-from decorators import *
+from HackerRank.decorators import *
 
 @Track_Calls
 @memoize

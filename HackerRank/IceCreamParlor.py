@@ -43,7 +43,7 @@ For the 1st, the amount M = 4 and there are 5 flavors at the store. The flavors 
 For the 2nd test case, the amount M = 4 and the flavors indexed at 1 and 2 sum up to 4.
 """
 
-from decorators import *
+from HackerRank.decorators import *
 import sys
 from collections import defaultdict
 

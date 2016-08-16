@@ -69,7 +69,7 @@ If you are having trouble defining your solutions store, then think about it in 
 For help on reading from STDIN, see the HackerRank environment help page under the "Sample Problem Statement" section.
 '''
 
-from decorators import get_line
+from HackerRank.decorators import get_line
 import sys
 
 sys.stdin = open('inputs/coinchange/in1.txt')
