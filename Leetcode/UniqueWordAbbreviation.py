@@ -1,4 +1,3 @@
-
 __author__ = 'Michael'
 """
 An abbreviation of a word follows the form <first letter><number><last letter>. Below are some examples of word abbreviations:
@@ -29,15 +28,17 @@ isUnique("make") -> true
 from collections import defaultdict
 
 
+@profile
 def abbreviate(word):
     if len(word) <= 2:
         return word
 
     in_between = len(word[1:-1])
-    return word[0] + str(in_between) + word[-1]
+    return ''.join([word[0], str(in_between), word[-1]])
 
 
-class ValidWordAbbr(object):
+class ValidWordAbbr:
+    @profile
     def __init__(self, dictionary):
         """
         initialize your data structure here.
@@ -48,6 +49,7 @@ class ValidWordAbbr(object):
         for word in dictionary:
             self.dict2[abbreviate(word)] += 1
 
+    @profile
     def isUnique(self, word):
         """
         check if a word is unique.
@@ -62,15 +64,26 @@ class ValidWordAbbr(object):
 
 
 
-        # Your ValidWordAbbr object will be instantiated and called as such:
-        # vwa = ValidWordAbbr(dictionary)
-        # vwa.isUnique("word")
-        # vwa.isUnique("anotherWord")
+            # Your ValidWordAbbr object will be instantiated and called as such:
+            # vwa = ValidWordAbbr(dictionary)
+            # vwa.isUnique("word")
+            # vwa.isUnique("anotherWord")
 
+
+test1 = ["deer", "door", "cake", "card"]
+vwa = ValidWordAbbr(test1)
+
+vwa.isUnique("dear")
+vwa.isUnique("cart")
+vwa.isUnique("cane")
+vwa.isUnique("make")
+vwa.isUnique("card")
 
 from unittest import TestCase
 
-test1 = [ "deer", "door", "cake", "card" ]
+test1 = ["deer", "door", "cake", "card"]
+
+
 class TestValidWordAbbr(TestCase):
     def test_isUnique(self):
         vwa = ValidWordAbbr(test1)
