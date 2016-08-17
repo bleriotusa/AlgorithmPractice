@@ -43,6 +43,7 @@ class ValidWordAbbr(object):
         initialize your data structure here.
         :type dictionary: List[str]
         """
+        self.dic = list(dictionary)
         self.dict2 = defaultdict(int)
         for word in dictionary:
             self.dict2[abbreviate(word)] += 1
@@ -53,7 +54,11 @@ class ValidWordAbbr(object):
         :type word: str
         :rtype: bool
         """
-        return self.dict2[abbreviate(word)] == 0
+        # print("Word: {} Abbreviation: {}".format(word, abbreviate(word)))
+        if word not in self.dic:
+            return self.dict2[abbreviate(word)] == 0
+        else:
+            return self.dict2[abbreviate(word)] == self.dic.count(word)
 
 
 
@@ -74,3 +79,4 @@ class TestValidWordAbbr(TestCase):
         self.assertTrue(vwa.isUnique("cart"))
         self.assertFalse(vwa.isUnique("cane"))
         self.assertTrue(vwa.isUnique("make"))
+        self.assertTrue(vwa.isUnique("card"))
