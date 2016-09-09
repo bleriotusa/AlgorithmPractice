@@ -41,25 +41,33 @@ class NumberOfIslands:
         self.I = len(grid)
         self.J = len(grid[0])
         islands = 0
+
+        """ Search through every coordinate.
+                DFS when on land to explore the whole island and mark down the coordinates.
+                If next coordinate has not been searched and is land, this is a new island.
+        """
         for i in range(0, len(grid)):
             for j in range(0, len(grid[i])):
                 coordinate = grid[i][j]
+
                 # if island and not explored yet, mark as new island and explore it
-                if coordinate and (i, j) not in self.explored:
+                if coordinate == '1' and (i, j) not in self.explored:
                     islands += 1
-                    self.DFS((i, j))
+                    self.DFS((i, j))  # DFS to explore the whole island
 
         return islands
 
     def DFS(self, tup):
         dfs_exp = set()
         dfs_to_exp = [tup]
+
+        """ Do a DFS search, storing all coordinates that are on land """
         while dfs_to_exp:
             # explore next coord
             i, j = dfs_to_exp.pop()
 
-            # if 0, we're in water
-            if not self.grid[i][j]:
+            # if 0, we're in water, so stop exploring
+            if self.grid[i][j] == '0':
                 continue
 
             # else, we're still on island so mark this coord as explored
@@ -68,7 +76,7 @@ class NumberOfIslands:
                 # print('adding tup:', tup)
                 dfs_exp.add((i, j))
 
-            # add coords to search
+            # add coords to keep exploring
             if i - 1 >= 0 and (i - 1, j) not in dfs_exp:
                 dfs_to_exp.append((i - 1, j))
             if i + 1 < self.I and (i + 1, j) not in dfs_exp:
@@ -81,12 +89,14 @@ class NumberOfIslands:
 
 from unittest import TestCase
 
-test1 = [[1, 1, 1, 0], [1, 1, 1, 0], [1, 0, 0, 0], [1, 1, 0, 0], [0, 0, 0, 0]]
-test2 = [[1,1,0,0], [1,1,0,0], [0,0,1,0], [0,0,0,1], [0,0,0,1]]
-test3 = [[1]]
-test4 = [[1], [1]]
-test5 = [[1], [0], [1]]
+test1 = ["1110", "1110", "1000", "1100", "0000"]
+test2 = ["1100", "1100", "0010", "0001", "0001"]
+test3 = ["1"]
+test4 = ["1", "1"]
+test5 = ["1", "0", "1"]
 test6 = []
+test7 = ["11000", "11000", "00100", "00011"]
+
 
 class TestNumberOfIslands(TestCase):
     def test_numIslands(self):
@@ -97,8 +107,4 @@ class TestNumberOfIslands(TestCase):
         self.assertEqual(test.numIslands(test4), 1)
         self.assertEqual(test.numIslands(test5), 2)
         self.assertEqual(test.numIslands(test6), 0)
-
-
-    def test_numIslands2(self):
-        test = NumberOfIslands()
-        print(test.numIslands(test2))
+        self.assertEqual(test.numIslands(test7), 3)
