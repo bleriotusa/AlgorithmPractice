@@ -27,34 +27,46 @@ from Common.TreeNode import TreeNode
 
 
 class BinaryTreeLongestConsecutiveSequence:
-
     """
     Dynamic Programming approach with recursion
+    Base case, length 0 sequence
+    Otherwise, solve left and right, and then return largest
+    To solve:
+    1. current node must be one less than sub node
+    2. otherwise, reset the solution
+    3. keep track of the longest sequence with global
     """
-    def __init__(self):
-        self.curr_max = 0
-        self.maxx = 0
+
+    def longestConsecutiveHelper(self, root):
+        if not root:
+            return 0
+
+        left = self.longestConsecutiveHelper(root.left)
+        right = self.longestConsecutiveHelper(root.right)
+
+        if root.left and root.left.val == root.val + 1:
+            left += 1
+        else:
+            left = 0
+        if root.right and root.right.val == root.val + 1:
+            right += 1
+        else:
+            right = 0
+
+        longest = max(left, right, 1)
+        self.maxx = max(longest, self.maxx)
+
+        return max(left, right, 1)
 
     def longestConsecutive(self, root):
         """
         :type root: TreeNode
         :rtype: int
         """
-        if not root:
-            return 0
+        self.maxx = 0
+        self.longestConsecutiveHelper(root)
+        return self.maxx
 
-        left = self.longestConsecutive(root.left)
-        right = self.longestConsecutive(root.right)
-
-        if root.left and root.left.val == root.val + 1:
-            left += 1
-        if root.right and root.right.val == root.val + 1:
-            right += 1
-
-        self.curr_max = max(left, right, 1)
-        self.maxx = max(self.curr_max, self.maxx)
-
-        return max(left, right, 1)
 
 from unittest import TestCase
 
@@ -83,4 +95,3 @@ class TestBinaryTreeLongestConsecutiveSequence(TestCase):
         self.assertEqual(2, tester.longestConsecutive(test0))
         self.assertEqual(3, tester.longestConsecutive(test1))
         self.assertEqual(3, tester.longestConsecutive(test2))
-
