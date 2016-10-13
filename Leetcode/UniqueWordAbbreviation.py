@@ -44,10 +44,11 @@ class ValidWordAbbr:
         initialize your data structure here.
         :type dictionary: List[str]
         """
-        self.dic = list(dictionary)
+        self.dict3 = defaultdict(int)
         self.dict2 = defaultdict(int)
         for word in dictionary:
             self.dict2[abbreviate(word)] += 1
+            self.dict3[word] += 1
 
     @profile
     def isUnique(self, word):
@@ -57,10 +58,10 @@ class ValidWordAbbr:
         :rtype: bool
         """
         # print("Word: {} Abbreviation: {}".format(word, abbreviate(word)))
-        if word not in self.dic:
+        if word not in self.dict3.keys():
             return self.dict2[abbreviate(word)] == 0
         else:
-            return self.dict2[abbreviate(word)] == self.dic.count(word)
+            return self.dict2[abbreviate(word)] == self.dict3[word]
 
 
 
