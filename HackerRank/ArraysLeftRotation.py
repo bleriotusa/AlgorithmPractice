@@ -36,28 +36,20 @@ import sys
 from unittest import TestCase
 
 
-def rotate_left(a, n, k):
-    """ 1. Store the first variable
-        2. Go through the array and move next element to current
-        3. When there is no next, just insert the stored first variable
-
+def array_left_rotation(a, n, k):
+    """ 1. For each number,
+        2. Calculate the final destination after k rotations.
+        3. Add the number to the new destination in a new array
      """
     if not a:
         return a
 
-    first = a[0]
-    for i in range(0, len(a)):
-        if i + 1 < len(a):
-            a[i] = a[i + 1]
-        else:
-            a[i] = first
+    b = [0] * len(a)
 
+    for i in range(0, n):
+        b[i - k % n] = a[i]
 
-def array_left_rotation(a, n, k):
-    for i in range(0, k):
-        rotate_left(a, n, k)
-
-    return a
+    return b
 
 
 class TestArrayLeftRotation(TestCase):
@@ -78,3 +70,13 @@ class TestArrayLeftRotation(TestCase):
         answer = array_left_rotation(self.a, self.n, self.k)
         print(*answer, sep=' ')
         self.assertListEqual(answer, [5])
+
+    def test_3(self):
+        sys.stdin = open('inputs/arrayLeftRotation/in3.txt')
+        self.setup()
+        sys.stdin = open('inputs/arrayLeftRotation/out3.txt')
+        answer_key = list(map(int, input().strip().split(' ')))
+        answer = array_left_rotation(self.a, self.n, self.k)
+        print(*answer, sep=' ')
+        self.assertListEqual(answer, answer_key)
+
