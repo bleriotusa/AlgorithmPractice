@@ -38,11 +38,7 @@ class node:
         self.right = None
 
 
-d = defaultdict(int)
-
-
-def check_binary_search_tree_(root):
-    return is_binary_search_tree(root)
+from collections import defaultdict
 
 
 def memoize(f):
@@ -58,45 +54,47 @@ def memoize(f):
     return wrapper
 
 
-@memoize
-def root_max(root):
-    while (root.right):
-        root = root.right
-
-    return root.data
-
-
-@memoize
-def root_least(root):
-    while (root.left):
-        root = root.left
-
-    return root.data
-
-
-@memoize
-def is_binary_search_tree(root):
-    if not root:
-        return True
-    if d[root.data] > 0:
-        return False
-    else:
-        d[root.data] += 1
-
-    left_is_valid = ((not root.left) or (root.left.data < root.data and root_max(root.left) < root.data))
-    right_is_valid = ((not root.right) or (root.right.data > root.data and root_least(root.right) > root.data))
-
-    return left_is_valid and right_is_valid and is_binary_search_tree(root.left) and is_binary_search_tree(root.right)
-
-
 class Solution(object):
+    def __init__(self):
+        self.d = defaultdict(int)
+
     def isValidBST(self, root):
         """
         :type root: TreeNode
         :rtype: bool
         """
-        return is_binary_search_tree(root)
+        return self.is_binary_search_tree(root)
+
+    @memoize
+    def root_max(self, root):
+        while (root.right):
+            root = root.right
+
+        return root.val
+
+    @memoize
+    def root_least(self, root):
+        while (root.left):
+            root = root.left
+
+        return root.val
+
+    @memoize
+    def is_binary_search_tree(self, root):
+        if not root:
+            return True
+        if self.d[root.val] > 0:
+            return False
+        else:
+            self.d[root.val] += 1
+
+        left_is_valid = ((not root.left) or (root.left.val < root.val and self.root_max(root.left) < root.val))
+        right_is_valid = ((not root.right) or (root.right.val > root.val and self.root_least(root.right) > root.val))
+
+        return left_is_valid and right_is_valid and self.is_binary_search_tree(root.left) and self.is_binary_search_tree(
+            root.right)
 
 # print(is_binary_search_tree(node(1)))
+
 s = Solution()
 print(s.isValidBST(node(1)))
