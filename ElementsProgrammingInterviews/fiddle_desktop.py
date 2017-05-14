@@ -164,9 +164,12 @@ def buy_sell_stock(prices):
 
     return max_profit
 
+
 print('buy_sell', buy_sell_stock([310, 315, 275, 295, 260, 270, 290, 230, 255, 250]))
 
 import functools
+
+
 def string_to_int(num_string):
     '''
     '678' -> 678
@@ -179,13 +182,17 @@ def string_to_int(num_string):
         number += string.digits.index(char)
     return number
 
+
 def string_to_int_func(num_string):
     return functools.reduce(lambda answer, char_int: answer * 10 + string.digits.index(char_int), num_string, 0)
+
 
 print('string_to_int of 678 ->', string_to_int('678'))
 print('string_to_int_func of 678 ->', string_to_int_func('678'))
 
 import collections
+
+
 def int_to_string(num):
     '''
     678 -> '678'
@@ -199,6 +206,7 @@ def int_to_string(num):
         num //= 10
 
     return ''.join(answer_queue)
+
 
 print('int_to_string ->', int_to_string(678))
 
@@ -222,6 +230,7 @@ def merge_ll_2(ll1, ll2):
 
     return head.next
 
+
 l1 = node(2, node(5, node(7, node(8))))
 l2 = node(1, node(4, node(7, node(9, node(10, node(11))))))
 print_ll(merge_ll_2(l1, l2))
@@ -231,6 +240,7 @@ class MaxStack:
     '''
     use two stacks. one stack for the data, one stack keeping track of the current max element
     '''
+
     def __init__(self):
         self.data = []
         self.max_stack = []
@@ -263,9 +273,9 @@ print(4, s.pop())
 print(6, s.pop())
 print(None, s.pop())
 
-def is_height_balanced(tree:node):
 
-    def height_balanced_helper(tree:node):
+def is_height_balanced(tree: node):
+    def height_balanced_helper(tree: node):
         if not tree:
             return True, 0
 
@@ -275,19 +285,21 @@ def is_height_balanced(tree:node):
 
     return height_balanced_helper(tree)[0]
 
-class BinaryTreeNode:
 
+class BinaryTreeNode:
     def __init__(self, data=None, left=None, right=None):
         self.data = data
         self.left = left
         self.right = right
-# @exclude
+
+    # @exclude
 
     def __repr__(self):
         return '%s <- %s -> %s' % (self.left and self.left.data, self.data,
                                    self.right and self.right.data)
 
-#  balanced binary tree test
+
+# balanced binary tree test
 #      3
 #    2   5
 #  1    4 6
@@ -308,7 +320,6 @@ assert not is_height_balanced(tree)
 print(is_height_balanced(tree))
 
 
-
 def generate_permutations(array):
     '''
     [2, 3, 5, 7] has 4! permutations = 4 * 3 * 2 = 24
@@ -325,7 +336,6 @@ def generate_permutations(array):
     print(rest)
     answer = []
 
-
     for permut in rest:
         if not permut:
             answer.append([array[0]])
@@ -335,31 +345,36 @@ def generate_permutations(array):
 
     return answer
 
+
 print('permut ->', generate_permutations([2, 3, 5, 7]))
 
-
 import random
+
 random.choice
 import math
+
+
 def random_with_half(low, high):
     '''
     for an range of ints a-b, and a random num generator of 1 or 0, return a random number from the range
     :param array: 
     :return: Integer
     '''
-    bin_digits = int(math.log(abs(high-low), 2)) + 1
+    bin_digits = int(math.log(abs(high - low), 2)) + 1
 
     answer = ''
     while True:
         for i in range(bin_digits):
-            answer += str(random.randrange(0,2))
-        if int(answer, 2) + low <= high-low:
+            answer += str(random.randrange(0, 2))
+        if int(answer, 2) + low <= high - low:
             break
         answer = ''
     return int(answer, 2) + low
 
+
 print()
 print('random', random_with_half(2, 10))
+
 
 def evaluate_RPN(rpn_string):
     '''
@@ -384,7 +399,6 @@ def evaluate_RPN(rpn_string):
     return int(stack.pop())
 
 
-
 def eval_RPN(rpn_exp):
     if ',' not in rpn_exp:
         if rpn_exp[0] == '-':
@@ -395,5 +409,76 @@ def eval_RPN(rpn_exp):
     else:
         pass
 
+
 print('eval_rpn:', evaluate_RPN('-2, 6, 2, /, 2, +, *'))
 
+
+def inc_int_array(int_array):
+    """
+    [1, 2, 9] --> [1, 3, 0]
+    [0] --> [1]
+    [1, 9, 9, 9] --> [2, 0, 0, 0]
+    [9] --> [1, 0]
+    [2, 0] --> [2, 1]
+    :param int_array: list of ints
+    :return: list of ints
+    """
+    pass
+
+
+import Common.Tree
+from Common.Tree import TreeNode
+
+
+def symmetric_bt(bt: TreeNode):
+    """
+    A tree is symmetric if the root's left and right are symmetric trees.
+                100
+             /          \
+            50          50
+        /       \     /     \  
+      20        75  75      20
+      /                        \
+    10                            10  
+    :param bt: 
+    :return: 
+    """
+
+    def symmetric_bt_helper(bt_left, bt_right):
+        """
+        Base Cases:
+        1. None, None --> OK
+        2. True, True --> OK
+        3. None, True or True, None --> FALSE
+        
+        Two BTs are symmetric if roots are equal, and:
+        1. 1st Tree's Left is Symmetric to 2nd Tree's Right AND
+        2. 1st Tree's Right is Symmetric to 2nd Tree's Left
+        :param bt_left: 
+        :param bt_right: 
+        :return: bool
+        """
+        if not bt_left and not bt_right:
+            return True
+
+        elif (not bt_left and bt_right) or (bt_left and not bt_right):
+            return False
+
+        equal = bt_left.value = bt_right.value
+        left_left_symm_right_right = symmetric_bt_helper(bt_left.left, bt_right.right)
+        left_right_symm_right_left = symmetric_bt_helper(bt_left.right, bt_right.left)
+
+        return equal and left_left_symm_right_right and left_right_symm_right_left
+
+    return not bt or symmetric_bt_helper(bt.left, bt.right)
+
+print()
+# t = TreeNode(10, TreeNode(5, TreeNode(2), TreeNode(7)), TreeNode(15))
+# print(Common.Tree.tree_to_list(t))
+sym_tree = Common.Tree.list_to_tree([100, [50, [20, [10, None, None], None], [75, None, None]], [50, [75, None, None], [20, None, [10, None, None]]]])
+# Common.Tree.print_tree(sym_tree)
+non_sym_tree = Common.Tree.list_to_tree([100, [50, [20, [10, None, [1, None, None]], None], [75, None, None]], [50, [75, None, None], [20, None, [10, None, None]]]])
+
+
+print("sym tree is symmetric:", symmetric_bt(sym_tree))
+print("non sym tree is not symmetric:", symmetric_bt(non_sym_tree))

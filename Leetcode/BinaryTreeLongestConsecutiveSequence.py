@@ -23,7 +23,7 @@ Longest consecutive sequence path is 2-3,not3-2-1, so return 2.
 
 https://leetcode.com/problems/binary-tree-longest-consecutive-sequence/
 """
-from Common.TreeNode import TreeNode
+from Common.Tree import TreeNode
 
 
 class BinaryTreeLongestConsecutiveSequence:

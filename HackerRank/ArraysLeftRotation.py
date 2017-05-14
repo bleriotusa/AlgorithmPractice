@@ -80,3 +80,4 @@ class TestArrayLeftRotation(TestCase):
         print(*answer, sep=' ')
         self.assertListEqual(answer, answer_key)
 
+
