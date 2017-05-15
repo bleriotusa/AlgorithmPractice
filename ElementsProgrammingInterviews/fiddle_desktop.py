@@ -472,13 +472,92 @@ def symmetric_bt(bt: TreeNode):
 
     return not bt or symmetric_bt_helper(bt.left, bt.right)
 
+
 print()
 # t = TreeNode(10, TreeNode(5, TreeNode(2), TreeNode(7)), TreeNode(15))
 # print(Common.Tree.tree_to_list(t))
-sym_tree = Common.Tree.list_to_tree([100, [50, [20, [10, None, None], None], [75, None, None]], [50, [75, None, None], [20, None, [10, None, None]]]])
+sym_tree = Common.Tree.list_to_tree(
+    [100, [50, [20, [10, None, None], None], [75, None, None]], [50, [75, None, None], [20, None, [10, None, None]]]])
 # Common.Tree.print_tree(sym_tree)
-non_sym_tree = Common.Tree.list_to_tree([100, [50, [20, [10, None, [1, None, None]], None], [75, None, None]], [50, [75, None, None], [20, None, [10, None, None]]]])
-
+non_sym_tree = Common.Tree.list_to_tree([100, [50, [20, [10, None, [1, None, None]], None], [75, None, None]],
+                                         [50, [75, None, None], [20, None, [10, None, None]]]])
 
 print("sym tree is symmetric:", symmetric_bt(sym_tree))
 print("non sym tree is not symmetric:", symmetric_bt(non_sym_tree))
+
+
+def max_concurrent_events(events):
+    """
+    Given a list of events, we can check for the max events at the same time by
+    1. Sorting the list of intervals by the starting interval 
+    2. For each interval start/end point, check how many concurrent events are going on at that time
+    
+    Faster way is:
+    1. Create list of endpoints from list of events (keeping info of start or end endpoint)
+    2. Sort endpoints (with start points before endpoints if tie)
+    3. Count up start points, subtract endpoints, keep track of max
+    
+    This uses an idea of augmenting your data into a more usable form
+    :param events: 
+    :return: integer max number of concurrent events
+    """
+    START = 0
+    END = 1
+    endpoints = []
+    for event in events:
+        endpoints.append((event[0], START))
+        endpoints.append((event[1], END))
+
+    max_count = curr_count = 0
+
+    for endpoint, start_end in sorted(endpoints):
+        if not start_end:  # this is a start
+            curr_count += 1
+
+        else:
+            curr_count -= 1
+
+        max_count = max(max_count, curr_count)
+
+    return max_count
+
+
+events = [(1, 4), (0, 5), (4, 8), (3, 4), (7, 10), (8, 11), (3, 6)]
+print()
+print("Max concurrent events:", max_concurrent_events(events))
+
+
+def LCA_BST(bst: TreeNode, node1: TreeNode, node2: TreeNode):
+    """
+    Least common ancestor can be found by searching for both distinct nodes simultaneously, and remembering 
+    the last node searched before the searches differ.
+    
+    candidate for coding
+    :param bst:
+    :param node1:
+    :param node2:
+    :return: node that is the LCA of node1 and node2
+    """
+
+    def bs_helper(bst: TreeNode):
+
+        if node1.value < bst.value < node2.value or node1.value == bst.value or node2.value == bst.value:
+            return bst
+
+        elif node1.value < bst.value and bst.left:
+            return bs_helper(bst.left)
+
+        elif node1.value > bst.value and bst.right:
+            return bs_helper(bst.right)
+
+        # return bst
+
+    LCA = bs_helper(bst)
+    return LCA
+
+
+bst_for_LCA = Common.Tree.list_to_tree([100, [50, [25, None, [27, [26, None, None], [30, None, None]]], [75, None, None]], [150, [125, None, [128, None, None]], None]])
+print()
+print("LCA of BST should be 50:", LCA_BST(bst_for_LCA, TreeNode(30), TreeNode(75)).value)
+print("LCA of BST should be 100:", LCA_BST(bst_for_LCA, TreeNode(26), TreeNode(128)).value)
+print("LCA of BST should be 25:", LCA_BST(bst_for_LCA, TreeNode(25), TreeNode(30)).value)
