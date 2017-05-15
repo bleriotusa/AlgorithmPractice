@@ -321,32 +321,37 @@ print(is_height_balanced(tree))
 
 
 def generate_permutations(array):
-    '''
+    """
     [2, 3, 5, 7] has 4! permutations = 4 * 3 * 2 = 24
-    :param array: 
-    :return: 
-    '''
+    [[2, 3, 5, 7], [2, 3, 7, 5], [2, 5, 3, 7], [2, 5, 7, 3], [2, 7, 3, 5], [2, 7, 5, 3]]
+    
+    iterate through the array and swap the first element with the all the others so that all elements get a chance at 
+    being first.
+    
+    while iterating, add the first element as the first element of every permutation returned by a recursive call
+    to the rest of the list
+    
+    :param array: list of elements
+    :return: list of lists (permutations) of the original list of elements
+    """
     if not array:
-        return [[]]
+        return []
 
-    # elif len(array) == 1:
-    #     return [array]
+    if len(array) == 1:
+        return [array]
 
-    rest = generate_permutations(array[1:])
-    print(rest)
-    answer = []
+    permutations = []
+    for i in range(len(array)):
+        array[i], array[0] = array[0], array[i]
+        permutations.extend([[array[0]] + permutation for permutation in generate_permutations(array[1:])])
 
-    for permut in rest:
-        if not permut:
-            answer.append([array[0]])
-        else:
-            for i in range(len(permut)):
-                answer.append(permut.insert(i, array[0]))
+    return permutations
 
-    return answer
+print()
+for permutation in enumerate(generate_permutations([2, 3, 5, 7])):
+    print('permut {}-> {}'.format(permutation[0] + 1, permutation[1]))
 
-
-print('permut ->', generate_permutations([2, 3, 5, 7]))
+print("distinct permutations:", len({tuple(permutation) for permutation in generate_permutations([2, 3, 5, 7])}))
 
 import random
 
@@ -397,17 +402,6 @@ def evaluate_RPN(rpn_string):
             stack.append(item)
 
     return int(stack.pop())
-
-
-def eval_RPN(rpn_exp):
-    if ',' not in rpn_exp:
-        if rpn_exp[0] == '-':
-            return int(rpn_exp[1:]) * -1
-        else:
-            return int(rpn_exp)
-
-    else:
-        pass
 
 
 print('eval_rpn:', evaluate_RPN('-2, 6, 2, /, 2, +, *'))
@@ -486,6 +480,29 @@ print("sym tree is symmetric:", symmetric_bt(sym_tree))
 print("non sym tree is not symmetric:", symmetric_bt(non_sym_tree))
 
 
+def nearest_repeated_entries(words):
+    """
+    use a dict of the last known position of each word
+    keep a min distance variable
+    :param words: array representing paragraph
+    :return: min distance between words
+    """
+    d = {}
+    min_dist = float('inf')
+    for i, word in enumerate(words):
+        if word in d:
+            min_dist = min(min_dist, i - d[word])
+
+        d[word] = i
+
+    return min_dist
+
+
+sentence = "Hello there we are the best the best country so please be nice!".split(' ')
+print()
+print("Nearest repeated entries", nearest_repeated_entries(sentence))
+
+
 def max_concurrent_events(events):
     """
     Given a list of events, we can check for the max events at the same time by
@@ -550,14 +567,25 @@ def LCA_BST(bst: TreeNode, node1: TreeNode, node2: TreeNode):
         elif node1.value > bst.value and bst.right:
             return bs_helper(bst.right)
 
-        # return bst
+            # return bst
 
     LCA = bs_helper(bst)
     return LCA
 
 
-bst_for_LCA = Common.Tree.list_to_tree([100, [50, [25, None, [27, [26, None, None], [30, None, None]]], [75, None, None]], [150, [125, None, [128, None, None]], None]])
+bst_for_LCA = Common.Tree.list_to_tree(
+    [100, [50, [25, None, [27, [26, None, None], [30, None, None]]], [75, None, None]],
+     [150, [125, None, [128, None, None]], None]])
 print()
 print("LCA of BST should be 50:", LCA_BST(bst_for_LCA, TreeNode(30), TreeNode(75)).value)
 print("LCA of BST should be 100:", LCA_BST(bst_for_LCA, TreeNode(26), TreeNode(128)).value)
 print("LCA of BST should be 25:", LCA_BST(bst_for_LCA, TreeNode(25), TreeNode(30)).value)
+
+
+def most_visited_page(file):
+    """
+    Use a combination of BST with keys of visit # / id tuples and a hashmap of ids to nodes of the bst
+    :param file: 
+    :return: 
+    """
+    pass
