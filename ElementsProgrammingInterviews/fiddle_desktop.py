@@ -347,6 +347,7 @@ def generate_permutations(array):
 
     return permutations
 
+
 print()
 for permutation in enumerate(generate_permutations([2, 3, 5, 7])):
     print('permut {}-> {}'.format(permutation[0] + 1, permutation[1]))
@@ -589,3 +590,155 @@ def most_visited_page(file):
     :return: 
     """
     pass
+
+
+def memoize(f):
+    cache, hits = {}, 0
+    hits = 0
+
+    def mem_func(*parms):
+        nonlocal hits
+        if parms in cache:
+            hits += 1
+            return cache[parms]
+
+        result = f(*parms)
+        cache[parms] = result
+        # print("hits", hits)
+        return result
+
+    return mem_func
+
+
+@memoize
+def traverse_2d_array(i, j):
+    """
+    Count number of ways to traverse from top left to bottom.
+    BFS.
+    Return 1 if bottom right, 0 if out of bounds, else the addition of all your subcalls. 
+    
+    Process:
+    - Break up the problem space in to subproblems? couldn't.
+    - How to solve this anyway? Optimize after.
+    - How to get to the end? Try all ways starting from the top left. Seems like a graph search..
+    - BST covers all your moves for each grid position. 
+    - How to get answer? add up subcalls.. guess we have to return a value
+    - If we return 1 at destination, seems like we can propogate that value all the way back up the call chain!
+    - Out of bounds means that wasn't a path... = 0.
+    
+    wrong.
+    step 1 was wrong, you can break the problem space into subproblems
+    full solution = number of ways to get to square on left, + top 
+    
+    :param i: rows of array
+    :param j: columns of array
+    :return: 
+    """
+
+    if (i, j) == (0, 0):
+        return 1
+
+    if i < 0 or j < 0:
+        return 0
+
+    return traverse_2d_array(i, j - 1) + traverse_2d_array(i - 1, j)
+
+
+import time
+
+print()
+print("paths to 2 by 2:", traverse_2d_array(1, 1))
+print("paths to 3 by 3:", traverse_2d_array(2, 2))
+print("paths to 5 by 5:", traverse_2d_array(4, 4))
+
+start = time.perf_counter()
+print("paths to 5 by 5:", traverse_2d_array(100, 100))
+end = time.perf_counter()
+print(end - start)
+
+import itertools
+
+
+def knapsack_subset(items: list, capacity):
+    """
+    [(5g, $20), (7g, $50), (2g, $10), (3g, $25)], 13g
+    :return: 
+    """
+
+    def subsets_valid_weight(items):
+        if not items:
+            return [[]]
+
+        subsets_rest = subsets_valid_weight(items[1:])
+        subsets_rest = list(
+            filter(lambda subset: sum((item[0] for item in subset) if subset else [0]) <= capacity, subsets_rest))
+        # print(subsets_rest)
+        result = subsets_rest + [[items[0]] + subset for subset in subsets_rest]
+        result = list(filter(lambda subset: sum((item[0] for item in subset) if subset else [0]) <= capacity, result))
+        return [sorted(subset) for subset in result]
+
+    max_subset = max(subsets_valid_weight(items), key=lambda subset: sum(item[1] for item in subset))
+    return sum(item[1] for item in max_subset)
+
+
+def subsets_valid_weight(items, capacity):
+    if not items:
+        return [[]]
+
+    subsets_rest = subsets_valid_weight(items[1:], capacity)
+    subsets_rest = list(
+        filter(lambda subset: sum((item[0] for item in subset) if subset else [0]) <= capacity, subsets_rest))
+    # print(subsets_rest)
+    result = subsets_rest + [[items[0]] + subset for subset in subsets_rest]
+    result = list(filter(lambda subset: sum((item[0] for item in subset) if subset else [0]) <= capacity, result))
+    return [sorted(subset) for subset in result]
+
+
+print()
+items = [(5, 20), (7, 50), (2, 10), (3, 25)]
+print('subsets_valid_weight', subsets_valid_weight(items, 13))
+print('knapsack:', knapsack_subset(items, 13))
+
+
+# @memoize
+def knapsack(items, capacity):
+    if not items or capacity < 0:
+        return 0
+
+    elif len(items) == 1:
+        return items[0][1] if items[0][0] <= capacity else 0
+
+    knapsack_rest_nofirst = knapsack(items[1:], capacity)
+    knapsack_rest_first = knapsack(items[1:], capacity - items[0][0])
+    return max(knapsack_rest_nofirst, knapsack_rest_first + items[0][1])
+
+
+def knapsack_set(items, capacity):
+    """
+    get answers of knapsack with the first item of list and without the first item
+    if the first item's weight is <= capacity, get the max of the two, otherwise, just return the answer for the rest
+    :param items: 
+    :param capacity: 
+    :return: 
+    """
+    if not items or capacity < 0:
+        return ()
+
+    elif len(items) == 1:
+        return items if items[0][0] <= capacity else ()
+
+    knapsack_rest_nofirst = knapsack_set(items[1:], capacity)
+    knapsack_rest_first = knapsack_set(items[1:], capacity - items[0][0])
+    return max(knapsack_rest_nofirst, (items[0],) + knapsack_rest_first,
+               key=lambda knapsack: sum(item[1] for item in knapsack)) if items[0][
+                                                                              0] <= capacity else knapsack_rest_nofirst
+
+
+print()
+items = ((5, 20), (7, 50), (2, 10), (3, 25))
+items2 = (
+(20, 65), (8, 35), (60, 245), (55, 195), (70, 150), (85, 275), (25, 155), (30, 120), (65, 320), (75, 75), (10, 40),
+(95, 200), (50, 100), (40, 220), (10, 99))
+print('knapsackk:', knapsack_set(items, 13))
+k2 = knapsack_set(items2, 130)
+print('knapsackk:', knapsack_set(items2, 130), sum(item[0] for item in k2), sum(item[1] for item in k2))
