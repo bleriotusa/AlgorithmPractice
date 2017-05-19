@@ -5,6 +5,13 @@ class TreeNode(object):
         self.right = right
 
 
+class SizeTreeNode(TreeNode):
+    def __init__(self, x, left=None, right=None, size=0):
+        super(x, left, right)
+        self.size = size
+
+
+
 def list_to_tree(alist):
     if not alist:
         return None

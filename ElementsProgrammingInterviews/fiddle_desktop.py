@@ -737,8 +737,130 @@ def knapsack_set(items, capacity):
 print()
 items = ((5, 20), (7, 50), (2, 10), (3, 25))
 items2 = (
-(20, 65), (8, 35), (60, 245), (55, 195), (70, 150), (85, 275), (25, 155), (30, 120), (65, 320), (75, 75), (10, 40),
-(95, 200), (50, 100), (40, 220), (10, 99))
+    (20, 65), (8, 35), (60, 245), (55, 195), (70, 150), (85, 275), (25, 155), (30, 120), (65, 320), (75, 75), (10, 40),
+    (95, 200), (50, 100), (40, 220), (10, 99))
 print('knapsackk:', knapsack_set(items, 13))
 k2 = knapsack_set(items2, 130)
 print('knapsackk:', knapsack_set(items2, 130), sum(item[0] for item in k2), sum(item[1] for item in k2))
+
+
+def majority_element(strings):
+    """
+    [a, a, b, b, a, a, b, a]
+    [s, a, s, a, a, a, c, a]
+    [a, b, a, b, a, a, b, a]
+    :return: 
+    """
+    if not strings:
+        return ""
+
+    candidate, candidate_count = strings[0], 0
+
+    for word in strings:
+        if word == candidate:
+            candidate_count += 1
+        else:
+            if candidate_count == 0:
+                candidate = word
+            else:
+                candidate_count -= 1
+
+    return candidate
+
+
+print()
+print("Majority element is a:", majority_element(['a', 'a', 'b', 'b', 'a', 'a', 'b', 'a']))
+print("Majority element is a:", majority_element(['s', 'a', 's', 'b', 'a', 'a', 'c', 'a']))
+print("Majority element is a:", majority_element(['a', 'b', 'a', 'b', 'a', 'a', 'b', 'a']))
+
+from Common.Tree import SizeTreeNode
+
+
+def kth_node(bst: SizeTreeNode, k):
+    """
+                    100
+                /           \
+            50                  150
+        /       \           /         \
+    25          75                      175
+            /                              \
+        60                                     185
+                                              /
+                                        180
+    
+        #  size field
+    #      6
+    #    2   3
+    #  1    1 1
+    #
+    #  data field
+    #      3
+    #    2   5
+    #  1    4 6
+    :param bst: 
+    :return: 
+    """
+
+    while bst:
+        size_left = bst.left.size if bst.left else 0
+
+        if size_left + 1 == k:
+            return bst
+
+        elif k <= size_left:
+            bst = bst.left
+
+        else:
+            k -= size_left + 1
+            bst = bst.right
+
+    return None
+
+
+class BinaryTreeNode:
+    def __init__(self, data=None, left=None, right=None, size=None):
+        self.data = data
+        self.left = left
+        self.right = right
+        self.size = size
+
+
+root = BinaryTreeNode()
+root.size = 6
+root.data = 3
+root.left = BinaryTreeNode()
+root.left.size = 2
+root.left.data = 2
+root.left.left = BinaryTreeNode()
+root.left.left.size = 1
+root.left.left.data = 1
+root.right = BinaryTreeNode()
+root.right.size = 3
+root.right.data = 5
+root.right.left = BinaryTreeNode()
+root.right.left.size = 1
+root.right.left.data = 4
+root.right.right = BinaryTreeNode()
+root.right.right.size = 1
+root.right.right.data = 6
+print()
+assert None is kth_node(root, 0)
+# should output 1
+assert kth_node(root, 1).data == 1
+print("kth node:", (kth_node(root, 1)).data)
+# should output 2
+assert kth_node(root, 2).data == 2
+print("kth node:", (kth_node(root, 2)).data)
+# should output 3
+assert kth_node(root, 3).data == 3
+print("kth node:", (kth_node(root, 3)).data)
+# should output 4
+assert kth_node(root, 4).data == 4
+print("kth node:", (kth_node(root, 4)).data)
+# should output 5
+assert kth_node(root, 5).data == 5
+print("kth node:", (kth_node(root, 5)).data)
+# should output 6
+assert kth_node(root, 6).data == 6
+print("kth node:", (kth_node(root, 6)).data)
+assert None is kth_node(root, 7)
