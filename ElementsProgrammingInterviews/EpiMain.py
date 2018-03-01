@@ -1,7 +1,10 @@
 import copy
+from unittest import TestCase
 import functools
 
 import collections
+
+tester = TestCase()
 
 
 class fiddle1:
@@ -151,11 +154,69 @@ def nearest_entries(array):
     pass
 
 
-def dutch_partition(array):
-    pass
+def dutch_partition(array, index):
+    array = array.copy()
+    low = 0
+    uncat = 0
+    high = len(array) - 1
+    pivot = array[index]
+
+    while uncat <= high:
+        if array[uncat] < pivot:
+            array[low], array[uncat] = array[uncat], array[low]
+            low += 1
+            uncat += 1
+        elif array[uncat] == pivot:
+            uncat += 1
+        else:
+            array[high], array[uncat] = array[uncat], array[high]
+            high -= 1
+
+    return array
 
 
-def buy_sell_stock(prices):
+'''
+ [0, 2, 1, 5, 0, 1]
+ [0, 1, 1, 5, 0, 2]
+ [0, 1, 1, 5, 0, 2]
+ [0, 1, 1, 5, 0, 2]
+ [0, 1, 1, 0, 5, 2]
+
+ [3, 1, 4, 5, 5, 2, 9, 8]
+ [3, 1, 4, 5, 2, 9, 8]
+ [0, 2, 1, 0, 1, 5]
+
+ '''
+
+
+def check_dutch_partition(array, p):
+    low = functools.reduce(lambda acc, e: acc + (1 if (e < p) else 0), array, 0)
+    equal = functools.reduce(lambda acc, e: acc + (1 if (e == p) else 0), array, 0)
+    for i in range(len(array)):
+        if i < low:
+            TestCase.assertLess(tester, array[i], p)
+        elif equal and i < low + equal:
+            TestCase.assertEqual(tester, array[i], p)
+        else:
+            TestCase.assertGreater(tester, array[i], p)
+
+
+dutch_array = [0, 2, 1, 5, 0, 1]
+dutch_index = 3
+dutch_result = dutch_partition(dutch_array, dutch_index)
+
+pivot = dutch_array[dutch_index]
+print("\n\nDUTCH PARTITION\nINPUT: {}\nRESULT: {}".format(dutch_array, dutch_result))
+check_dutch_partition(dutch_result, pivot)
+
+dutch_index = 2
+pivot = dutch_array[dutch_index]
+dutch_result = dutch_partition(dutch_array, dutch_index)
+print("\n\nDUTCH PARTITION\nINPUT: {}\nRESULT: {}\n\n".format(dutch_array, dutch_result))
+check_dutch_partition(dutch_result, pivot)
+
+
+def buy_sell_stock_once(prices):
     minimum = prices[0]
     max_profit = 0
     for price in prices[1:]:
@@ -165,9 +226,11 @@ def buy_sell_stock(prices):
     return max_profit
 
 
-print('buy_sell', buy_sell_stock([310, 315, 275, 295, 260, 270, 290, 230, 255, 250]))
+print('buy_sell', buy_sell_stock_once([310, 315, 275, 295, 260, 270, 290, 230, 255, 250]))
 
-import functools
+
+def buy_sell_stock_twice(prices):
+    pass
 
 
 def string_to_int(num_string):
@@ -864,3 +927,18 @@ print("kth node:", (kth_node(root, 5)).data)
 assert kth_node(root, 6).data == 6
 print("kth node:", (kth_node(root, 6)).data)
 assert None is kth_node(root, 7)
+
+for i in range(10):
+    pass
+
+
+def well_formed():
+    """
+    stack with lefts, right side symbols pop top if it's the corresponding left symbol.
+    :return: 
+    """
+    pass
+
+
+test = [0]
+print(test[1:])
