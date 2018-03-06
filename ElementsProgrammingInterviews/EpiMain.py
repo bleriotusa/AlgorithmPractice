@@ -309,7 +309,11 @@ class MaxStack:
         self.max_stack = []
 
     def pop(self):
-        result = not self.data or self.data.pop()
+        if self.data:
+            result = self.data.pop()
+        else:
+            raise IndexError("pop from empty list")
+
         if self.max_stack and result == self.max_stack[-1]:
             self.max_stack.pop()
 
@@ -334,7 +338,10 @@ print(8, s.pop())
 print(6, s.get_max())
 print(4, s.pop())
 print(6, s.pop())
-print(None, s.pop())
+try:
+    print(None, s.pop())
+except IndexError as err:
+    print('Caught exception: ' + err.args[0])
 
 
 def is_height_balanced(tree: node):
