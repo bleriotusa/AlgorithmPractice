@@ -1,8 +1,11 @@
 import copy
-from unittest import TestCase
 import functools
-
+from heapq import heappush, heappop
+import random
+import string
+from unittest import TestCase
 import collections
+import math
 
 tester = TestCase()
 
@@ -39,8 +42,6 @@ def bestDays(prices):
 print(bestDays([5, 10, 0, 3, 4, 5]))
 
 print(~0)
-
-import string
 
 
 def intToString(integer):
@@ -390,6 +391,40 @@ assert not is_height_balanced(tree)
 print(is_height_balanced(tree))
 
 
+def merge_sorted_files(files: [collections.Iterable]):
+    """
+    [3, 5, 7]
+    [0, 6]
+    [0, 6, 28]
+    Start with heap with initial elements
+    pop from heap into answer list, push from the list that it came from.
+    :param files: list of iterables
+    :return: list of sorted elements from files
+    """
+    heap = []
+    result = []
+
+    for i in range(len(files)):
+        heappush(heap, (next(files[i]), i))
+
+    while heap:
+        smallest = heappop(heap)
+        result.append(smallest[0])
+        popped_index = smallest[1]
+        try:
+            next_item = (next(files[popped_index]), popped_index)
+        except StopIteration:
+            continue
+        heappush(heap, next_item)
+
+    return result
+
+
+files_test = [iter([3, 5, 7]), iter([0, 6]), iter([0, 6, 28])]
+files_test2 = [iter([3, 5, 7]), iter([0, 6]), iter([0, 6, 28])]
+print("\n\nMerge Files: {}\nMerged Files: {}".format([list(file) for file in files_test], merge_sorted_files(files_test2)))
+
+
 def generate_permutations(array):
     """
     [2, 3, 5, 7] has 4! permutations = 4 * 3 * 2 = 24
@@ -423,11 +458,6 @@ for permutation in enumerate(generate_permutations([2, 3, 5, 7])):
     print('permut {}-> {}'.format(permutation[0] + 1, permutation[1]))
 
 print("distinct permutations:", len({tuple(permutation) for permutation in generate_permutations([2, 3, 5, 7])}))
-
-import random
-
-random.choice
-import math
 
 
 def random_with_half(low, high):
@@ -725,8 +755,6 @@ start = time.perf_counter()
 print("paths to 5 by 5:", traverse_2d_array(100, 100))
 end = time.perf_counter()
 print(end - start)
-
-import itertools
 
 
 def knapsack_subset(items: list, capacity):
