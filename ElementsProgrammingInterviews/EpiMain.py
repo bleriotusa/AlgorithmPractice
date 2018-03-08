@@ -422,7 +422,28 @@ def merge_sorted_files(files: [collections.Iterable]):
 
 files_test = [iter([3, 5, 7]), iter([0, 6]), iter([0, 6, 28])]
 files_test2 = [iter([3, 5, 7]), iter([0, 6]), iter([0, 6, 28])]
-print("\n\nMerge Files: {}\nMerged Files: {}".format([list(file) for file in files_test], merge_sorted_files(files_test2)))
+print("\n\nMerge Files: {}\nMerged Files: {}".format([list(file) for file in files_test],
+                                                     merge_sorted_files(files_test2)))
+
+
+def sorted_arrays_intersection(arr1, arr2):
+    result = []
+    i1 = i2 = 0
+    while i1 < len(arr1) and i2 < len(arr2):
+        if arr1[i1] == arr2[i2]:
+            result.append(arr1[i1])
+            i1, i2 = i1 + 1, i2 + 1
+        elif arr1[i1] > arr2[i2]:
+            i2 += 1
+        else:
+            i1 += 1
+    return result
+
+
+s_a1 = [0, 2, 3, 6]
+s_a2 = [1, 2, 3, 8]
+print('\n\nIntersection of Sorted Arrays: {}{}\nIntersection Array: {}'.format(s_a1, s_a2,
+                                                                               sorted_arrays_intersection(s_a1, s_a2)))
 
 
 def generate_permutations(array):
