@@ -998,3 +998,36 @@ def well_formed():
 
 test = [0]
 print(test[1:])
+
+
+def n_queens(n):
+    """
+    Enumerate placements that use distinct rows. Mostly uses recursion for backtracking.
+        Basically only try one in a row at a time, that isn't in: a used column, a diagonal.
+        Diagonals mathematically is slope = 1 or -1. Slope = x2 - x1 / y2 - y1.. so you can just
+        check if abs(x2 - x1) = abs(y2 - y1)
+    :return:
+    """
+    result, col_placement = [], [-1] * n
+
+    def solve_n_queens(row):
+        if row == n:
+            result.append(list(col_placement))
+        else:
+            # try every column
+            for col in range(n):
+                # if none in same column or diagonal so far, add a queen to this column
+                # then do the same for the rest of the rows
+                if all(abs(col - c) not in (0, row - i) for i, c in enumerate(col_placement[:row])):
+                    col_placement[row] = col
+                    solve_n_queens(row + 1)
+
+    solve_n_queens(0)
+    return result
+
+
+print("\n\nn queens:")
+print(n_queens(2))
+print(n_queens(4))
+TestCase.assertEqual(tester, n_queens(2), [])
+TestCase.assertEqual(tester, n_queens(4), [[1, 3, 0, 2], [2, 0, 3, 1]])
