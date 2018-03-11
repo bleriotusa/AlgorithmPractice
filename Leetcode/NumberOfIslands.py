@@ -1,64 +1,110 @@
 """
-Problem Statement
-I guess you have never seen a bear eating at a table. The reason is simple: bears don't use tables. However, they may sometimes decide to sit on a chair while eating.
+Given a 2d grid map of '1's (land) and '0's (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.
 
+Example 1:
 
-Bear Limak is a waiter in a huge restaurant for bears. The restaurant has infinitely many chairs. The chairs are arranged in a single long row. In order, they are numbered using all positive integers: 1, 2, 3, ... Chair number 1 is closest to the entrance to the restaurant.
+11110
+11010
+11000
+00000
+Answer: 1
 
+Example 2:
 
-A bear takes a lot of space while eating, and all bears value their personal space. Limak knows that there is a universal constant d with the following meaning: Whenever two bears sit on chairs, their chair numbers must differ by d or more. For example, if d=10, you can have two bears in chairs 47 and 57, but you cannot have bears in chairs 47 and 56.
+11000
+11000
+00100
+00011
+Answer: 3
 
-
-The restaurant just opened for the day and all chairs are empty. During the day exactly N guests arrived, one at a time. Whenever a guest arrived, Limak assigned them a chair. Each guest stayed in the restaurant in their assigned chair until the end of the day.
-
-
-Generally, guests don't like to be seated close to the entrance because of the noise from the street. You are given a atLeast with N elements: one for each guest, in order. For each i from 0 to N-1, guest i came with a request: "My chair number must be greater than or equal to atLeast[i]."
-
-
-When seating a guest, Limak always assigns them the smallest available chair number. (That is, the smallest chair number that matches the guest's request and is at least d away from each of the bears who are already in the restaurant.) Return a with N elements: for each guest, in the order in which they arrived, the number of the chair where they will be seated.
-
-Definition
-
-Class: BearChairs
-Method: findPositions
-Parameters: int[], int
-Returns: int[]
-Method signature: int[] findPositions(int[] atLeast, int d)
-(be sure your method is public)
-
-Limits
-Time limit (s): 2.000
-Memory limit (MB): 256
-Constraints
-- N will be between 1 and 1000, inclusive.
-- atLeast will have exactly N elements.
-- Each element in atLeast will be between 1 and 10^6, inclusive.
-- d will be between 1 and 10^6, inclusive.
-
-Examples
-0)
-{1,21,11,7}
-10
-Returns: {1, 21, 11, 31 }
-Here is what will happen:
-Guest 0 wants a chair with a number greater or equal to 1. He gets the chair 1.
-Guest 1 wants a chair with a number greater or equal to 21. She gets the chair 21.
-Guest 2 wants a chair with a number greater or equal to 11. He gets the chair 11. Note that this chair is still far enough from each of the two bears who are already sitting in the restaurant.
-Guest 3 wants a chair with a number greater or equal to 7. The smallest available chair is chair number 31. All free chairs with smaller numbers are too close to some of the previous guests.
-1)
-{1,21,11,7}
-11
-Returns: {1, 21, 32, 43 }
-The guests have the same requests as in Example 0 but d is larger. Thus, guest 2 doesn't fit between guests 0 and 1 and must be seated in a chair with a larger number.
-2)
-{1000000,1000000,1000000,1}
-1000000
-Returns: {1000000, 2000000, 3000000, 4000000 }
-3)
-{1000000,1000000,1000000,1}
-999999
-Returns: {1000000, 1999999, 2999998, 1 }
-
-This problem statement is the exclusive and proprietary property of TopCoder, Inc. Any unauthorized use or reproduction of this information without the prior written consent of TopCoder, Inc. is strictly prohibited. (c)2003, TopCoder, Inc. All rights reserved.
-
+https://leetcode.com/problems/number-of-islands/
 """
+
+
+class NumberOfIslands:
+    def numIslands(self, grid):
+        """
+        for every coordinate,
+            if island and not explored,
+                add 1 to island count
+                DFS in every direction
+                    put explored coordinates in a tuple and into an explored set
+
+        :type grid: List[List[str]]
+        :rtype: int
+        """
+        if not grid:
+            return 0
+
+        self.grid = grid
+        self.explored = set()
+        self.I = len(grid)
+        self.J = len(grid[0])
+        islands = 0
+
+        """ Search through every coordinate.
+                DFS when on land to explore the whole island and mark down the coordinates.
+                If next coordinate has not been searched and is land, this is a new island.
+        """
+        for i in range(0, len(grid)):
+            for j in range(0, len(grid[i])):
+                coordinate = grid[i][j]
+
+                # if island and not explored yet, mark as new island and explore it
+                if coordinate == '1' and (i, j) not in self.explored:
+                    islands += 1
+                    self.DFS((i, j))  # DFS to explore the whole island
+
+        return islands
+
+    def DFS(self, tup):
+        dfs_exp = set()
+        dfs_to_exp = [tup]
+
+        """ Do a DFS search, storing all coordinates that are on land """
+        while dfs_to_exp:
+            # explore next coord
+            i, j = dfs_to_exp.pop()
+
+            # if 0, we're in water, so stop exploring
+            if self.grid[i][j] == '0':
+                continue
+
+            # else, we're still on island so mark this coord as explored
+            else:
+                self.explored.add((i, j))
+                # print('adding tup:', tup)
+                dfs_exp.add((i, j))
+
+            # add coords to keep exploring
+            if i - 1 >= 0 and (i - 1, j) not in dfs_exp:
+                dfs_to_exp.append((i - 1, j))
+            if i + 1 < self.I and (i + 1, j) not in dfs_exp:
+                dfs_to_exp.append((i + 1, j))
+            if j - 1 >= 0 and (i, j - 1) not in dfs_exp:
+                dfs_to_exp.append((i, j - 1))
+            if j + 1 < self.J and (i, j + 1) not in dfs_exp:
+                dfs_to_exp.append((i, j + 1))
+
+
+from unittest import TestCase
+
+test1 = ["1110", "1110", "1000", "1100", "0000"]
+test2 = ["1100", "1100", "0010", "0001", "0001"]
+test3 = ["1"]
+test4 = ["1", "1"]
+test5 = ["1", "0", "1"]
+test6 = []
+test7 = ["11000", "11000", "00100", "00011"]
+
+
+class TestNumberOfIslands(TestCase):
+    def test_numIslands(self):
+        test = NumberOfIslands()
+        self.assertEqual(test.numIslands(test1), 1)
+        self.assertEqual(test.numIslands(test2), 3)
+        self.assertEqual(test.numIslands(test3), 1)
+        self.assertEqual(test.numIslands(test4), 1)
+        self.assertEqual(test.numIslands(test5), 2)
+        self.assertEqual(test.numIslands(test6), 0)
+        self.assertEqual(test.numIslands(test7), 3)
