@@ -122,26 +122,22 @@ NOTE: None or 0 returns 0
 
 
 def football_combos(score):
-    if score == 0:
-        return 1
-    elif score < 0:
+    if score <= 0:
         return 0
 
     def valid_score(sub_score):
         return sub_score >= 0 and (sub_score % 2 == 0 or sub_score % 3 == 0 or sub_score % 7 == 0)
 
-    return (int(score - 2 > 0) + football_combos(score - 2)) if valid_score(score - 2) else 0 + \
-                                                                                            (int(
-                                                                                                score - 3 > 0) + football_combos(
-                                                                                                score - 3)) if valid_score(
-        score - 3) else 0 + \
-                        (int(score - 7 > 0) + football_combos(score - 7)) if valid_score(score - 7) else 0
+    return 1 + (int(score - 2 > 0) + football_combos(score - 2)) if valid_score(score - 2) else \
+        1 + (int(score - 3 > 0) + football_combos(score - 3)) if valid_score(score - 3) else \
+        1 + (int(score - 7 > 0) + football_combos(score - 7)) if valid_score(score - 7) else 0
 
 
-print(football_combos(2))
-print(football_combos(3))
-print(football_combos(7))
-print(football_combos(12))
+print('Football Combos WRONG')
+print('For 2 points: ', football_combos(2))
+print('For 3 points: ', football_combos(3))
+print('For 7 points: ', football_combos(7))
+print('For 12 points: ', football_combos(12))
 
 [5, 7, 2, 9, -2, 4, 10], 8
 [5, 7, 2, 4]
