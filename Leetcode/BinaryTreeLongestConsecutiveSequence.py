@@ -23,7 +23,7 @@ Longest consecutive sequence path is 2-3,not3-2-1, so return 2.
 
 https://leetcode.com/problems/binary-tree-longest-consecutive-sequence/
 """
-from Common.Tree import TreeNode
+from Common.Tree import BinarySearchTreeNode
 
 
 class BinaryTreeLongestConsecutiveSequence:
@@ -60,7 +60,7 @@ class BinaryTreeLongestConsecutiveSequence:
 
     def longestConsecutive(self, root):
         """
-        :type root: TreeNode
+        :type root: BinarySearchTreeNode
         :rtype: int
         """
         self.maxx = 0
@@ -70,23 +70,23 @@ class BinaryTreeLongestConsecutiveSequence:
 
 from unittest import TestCase
 
-test0 = TreeNode(1)
-test0.left = TreeNode(2)
-test0.right = TreeNode(3)
+test0 = BinarySearchTreeNode(1)
+test0.left = BinarySearchTreeNode(2)
+test0.right = BinarySearchTreeNode(3)
 
-test1 = TreeNode(1)
-test1.right = TreeNode(2)
-test1.right.right = TreeNode(5)
-test1.right.right.right = TreeNode(1)
-test1.right.right.right.right = TreeNode(2)
-test1.right.right.right.right.right = TreeNode(3)
+test1 = BinarySearchTreeNode(1)
+test1.right = BinarySearchTreeNode(2)
+test1.right.right = BinarySearchTreeNode(5)
+test1.right.right.right = BinarySearchTreeNode(1)
+test1.right.right.right.right = BinarySearchTreeNode(2)
+test1.right.right.right.right.right = BinarySearchTreeNode(3)
 
-test2 = TreeNode(1)
-test2.right = TreeNode(2)
-test2.right.right = TreeNode(3)
-test2.right.right.right = TreeNode(5)
-test2.right.right.right.right = TreeNode(2)
-test2.right.right.right.right.right = TreeNode(3)
+test2 = BinarySearchTreeNode(1)
+test2.right = BinarySearchTreeNode(2)
+test2.right.right = BinarySearchTreeNode(3)
+test2.right.right.right = BinarySearchTreeNode(5)
+test2.right.right.right.right = BinarySearchTreeNode(2)
+test2.right.right.right.right.right = BinarySearchTreeNode(3)
 
 
 class TestBinaryTreeLongestConsecutiveSequence(TestCase):

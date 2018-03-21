@@ -6,6 +6,8 @@ import string
 from unittest import TestCase
 import collections
 import math
+from Common.Tree import *
+
 
 tester = TestCase()
 
@@ -575,10 +577,10 @@ def inc_int_array(int_array):
 
 
 import Common.Tree
-from Common.Tree import TreeNode
+from Common.Tree import BinarySearchTreeNode
 
 
-def symmetric_bt(bt: TreeNode):
+def symmetric_bt(bt: BinarySearchTreeNode):
     """
     A tree is symmetric if the root's left and right are symmetric trees.
                 100
@@ -612,7 +614,7 @@ def symmetric_bt(bt: TreeNode):
         elif (not bt_left and bt_right) or (bt_left and not bt_right):
             return False
 
-        equal = bt_left.value = bt_right.value
+        equal = bt_left.key = bt_right.key
         left_left_symm_right_right = symmetric_bt_helper(bt_left.left, bt_right.right)
         left_right_symm_right_left = symmetric_bt_helper(bt_left.right, bt_right.left)
 
@@ -698,7 +700,7 @@ print()
 print("Max concurrent events:", max_concurrent_events(events))
 
 
-def LCA_BST(bst: TreeNode, node1: TreeNode, node2: TreeNode):
+def LCA_BST(bst: BinarySearchTreeNode, node1: BinarySearchTreeNode, node2: BinarySearchTreeNode):
     """
     Least common ancestor can be found by searching for both distinct nodes simultaneously, and remembering 
     the last node searched before the searches differ.
@@ -710,15 +712,15 @@ def LCA_BST(bst: TreeNode, node1: TreeNode, node2: TreeNode):
     :return: node that is the LCA of node1 and node2
     """
 
-    def bs_helper(bst: TreeNode):
+    def bs_helper(bst: BinarySearchTreeNode):
 
-        if node1.value < bst.value < node2.value or node1.value == bst.value or node2.value == bst.value:
+        if node1.key < bst.key < node2.key or node1.key == bst.key or node2.key == bst.key:
             return bst
 
-        elif node1.value < bst.value and bst.left:
+        elif node1.key < bst.key and bst.left:
             return bs_helper(bst.left)
 
-        elif node1.value > bst.value and bst.right:
+        elif node1.key > bst.key and bst.right:
             return bs_helper(bst.right)
 
             # return bst
@@ -731,9 +733,9 @@ bst_for_LCA = Common.Tree.list_to_tree(
     [100, [50, [25, None, [27, [26, None, None], [30, None, None]]], [75, None, None]],
      [150, [125, None, [128, None, None]], None]])
 print()
-print("LCA of BST should be 50:", LCA_BST(bst_for_LCA, TreeNode(30), TreeNode(75)).value)
-print("LCA of BST should be 100:", LCA_BST(bst_for_LCA, TreeNode(26), TreeNode(128)).value)
-print("LCA of BST should be 25:", LCA_BST(bst_for_LCA, TreeNode(25), TreeNode(30)).value)
+print("LCA of BST should be 50:", LCA_BST(bst_for_LCA, BinarySearchTreeNode(30), BinarySearchTreeNode(75)).key)
+print("LCA of BST should be 100:", LCA_BST(bst_for_LCA, BinarySearchTreeNode(26), BinarySearchTreeNode(128)).key)
+print("LCA of BST should be 25:", LCA_BST(bst_for_LCA, BinarySearchTreeNode(25), BinarySearchTreeNode(30)).key)
 
 
 def most_visited_page(file):
@@ -924,10 +926,8 @@ print("Majority element is a:", majority_element(['a', 'a', 'b', 'b', 'a', 'a', 
 print("Majority element is a:", majority_element(['s', 'a', 's', 'b', 'a', 'a', 'c', 'a']))
 print("Majority element is a:", majority_element(['a', 'b', 'a', 'b', 'a', 'a', 'b', 'a']))
 
-from Common.Tree import SizeTreeNode
 
-
-def kth_node(bst: SizeTreeNode, k):
+def kth_node(bst: SizeBinarySearchTreeNode, k):
     """
                     100
                 /           \
@@ -968,52 +968,38 @@ def kth_node(bst: SizeTreeNode, k):
     return None
 
 
-class BinaryTreeNode:
-    def __init__(self, data=None, left=None, right=None, size=None):
-        self.data = data
-        self.left = left
-        self.right = right
-        self.size = size
-
-
-root = BinaryTreeNode()
+root = SizeBinarySearchTreeNode(3)
 root.size = 6
-root.data = 3
-root.left = BinaryTreeNode()
+root.left = SizeBinarySearchTreeNode(2)
 root.left.size = 2
-root.left.data = 2
-root.left.left = BinaryTreeNode()
+root.left.left = SizeBinarySearchTreeNode(1)
 root.left.left.size = 1
-root.left.left.data = 1
-root.right = BinaryTreeNode()
+root.right = SizeBinarySearchTreeNode(5)
 root.right.size = 3
-root.right.data = 5
-root.right.left = BinaryTreeNode()
+root.right.left = SizeBinarySearchTreeNode(4)
 root.right.left.size = 1
-root.right.left.data = 4
-root.right.right = BinaryTreeNode()
+root.right.right = SizeBinarySearchTreeNode(6)
 root.right.right.size = 1
-root.right.right.data = 6
 print()
 assert None is kth_node(root, 0)
 # should output 1
-assert kth_node(root, 1).data == 1
-print("kth node:", (kth_node(root, 1)).data)
+assert kth_node(root, 1).key == 1
+print("kth node:", (kth_node(root, 1)).key)
 # should output 2
-assert kth_node(root, 2).data == 2
-print("kth node:", (kth_node(root, 2)).data)
+assert kth_node(root, 2).key == 2
+print("kth node:", (kth_node(root, 2)).key)
 # should output 3
-assert kth_node(root, 3).data == 3
-print("kth node:", (kth_node(root, 3)).data)
+assert kth_node(root, 3).key == 3
+print("kth node:", (kth_node(root, 3)).key)
 # should output 4
-assert kth_node(root, 4).data == 4
-print("kth node:", (kth_node(root, 4)).data)
+assert kth_node(root, 4).key == 4
+print("kth node:", (kth_node(root, 4)).key)
 # should output 5
-assert kth_node(root, 5).data == 5
-print("kth node:", (kth_node(root, 5)).data)
+assert kth_node(root, 5).key == 5
+print("kth node:", (kth_node(root, 5)).key)
 # should output 6
-assert kth_node(root, 6).data == 6
-print("kth node:", (kth_node(root, 6)).data)
+assert kth_node(root, 6).key == 6
+print("kth node:", (kth_node(root, 6)).key)
 assert None is kth_node(root, 7)
 
 for i in range(10):
@@ -1063,3 +1049,30 @@ print(n_queens(2))
 print(n_queens(4))
 TestCase.assertEqual(tester, n_queens(2), [])
 TestCase.assertEqual(tester, n_queens(4), [[1, 3, 0, 2], [2, 0, 3, 1]])
+
+
+def next_key_of_bst(bst: BinarySearchTreeNode, key: int, candidate=None):
+    if not bst:
+        return candidate
+
+    if key < bst.key:
+        candidate = bst
+        return next_key_of_bst(bst.left, key, candidate)
+
+    else:
+        return next_key_of_bst(bst.right, key, candidate)
+
+
+print()
+print()
+print('Figure 14.1 Tree: ')
+figure_14_1_tree = [19, [7, [3, [2], [5]], [11, [], [17, [13], []]]], [43, [23, [], [37, [29, [], [31]], [41, [], []]]], [47, [], [53, [], []]]]]
+next_key_bst_test = list_to_tree(figure_14_1_tree)
+next_key_bst_test.print_tree()
+
+
+print('Next key after 23: ', next_key_of_bst(next_key_bst_test, 23, None).key)
+print('Next key after 13: ', next_key_of_bst(next_key_bst_test, 13, None).key)
+TestCase.assertEqual(tester, 29, next_key_of_bst(next_key_bst_test, 23, None).key)
+TestCase.assertEqual(tester, 17, next_key_of_bst(next_key_bst_test, 13, None).key)
+
