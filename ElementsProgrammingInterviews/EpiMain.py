@@ -8,7 +8,6 @@ import collections
 import math
 from Common.Tree import *
 
-
 tester = TestCase()
 
 
@@ -749,12 +748,11 @@ def most_visited_page(file):
 
 def memoize(f):
     cache, hits = {}, 0
-    hits = 0
+    memoize.hits = 0
 
     def mem_func(*parms):
-        nonlocal hits
         if parms in cache:
-            hits += 1
+            memoize.hits += 1
             return cache[parms]
 
         result = f(*parms)
@@ -807,9 +805,10 @@ print("paths to 3 by 3:", traverse_2d_array(2, 2))
 print("paths to 5 by 5:", traverse_2d_array(4, 4))
 
 start = time.perf_counter()
-print("paths to 5 by 5:", traverse_2d_array(100, 100))
+print("paths to 101 by 101:", traverse_2d_array(100, 100))
 end = time.perf_counter()
-print(end - start)
+print("Time:", end - start)
+print("Cache Calls:", memoize.hits)
 
 
 def knapsack_subset(items: list, capacity):
@@ -866,6 +865,7 @@ def knapsack(items, capacity):
     return max(knapsack_rest_nofirst, knapsack_rest_first + items[0][1])
 
 
+@memoize
 def knapsack_set(items, capacity):
     """
     get answers of knapsack with the first item of list and without the first item
@@ -892,9 +892,16 @@ items = ((5, 20), (7, 50), (2, 10), (3, 25))
 items2 = (
     (20, 65), (8, 35), (60, 245), (55, 195), (70, 150), (85, 275), (25, 155), (30, 120), (65, 320), (75, 75), (10, 40),
     (95, 200), (50, 100), (40, 220), (10, 99))
+items3 = (
+    (20, 65), (8, 35), (60, 245), (55, 195), (70, 150), (85, 275), (25, 155), (30, 120), (65, 320), (75, 75), (10, 40),
+    (95, 200), (50, 100), (40, 220), (10, 99), (22, 65), (82, 35), (61, 245), (555, 195), (72, 150), (86, 275),
+    (27, 155), (38, 120), (653, 320), (72, 75), (12, 40),
+    (90, 200), (53, 100), (42, 220), (11, 99))
 print('knapsackk:', knapsack_set(items, 13))
 k2 = knapsack_set(items2, 130)
 print('knapsackk:', knapsack_set(items2, 130), sum(item[0] for item in k2), sum(item[1] for item in k2))
+print('knapsackk:', knapsack_set(items3, 10000), sum(item[0] for item in k2), sum(item[1] for item in k2))
+print("Cache Calls:", memoize.hits)
 
 
 def majority_element(strings):
@@ -1066,13 +1073,80 @@ def next_key_of_bst(bst: BinarySearchTreeNode, key: int, candidate=None):
 print()
 print()
 print('Figure 14.1 Tree: ')
-figure_14_1_tree = [19, [7, [3, [2], [5]], [11, [], [17, [13], []]]], [43, [23, [], [37, [29, [], [31]], [41, [], []]]], [47, [], [53, [], []]]]]
+figure_14_1_tree = [19, [7, [3, [2], [5]], [11, [], [17, [13], []]]],
+                    [43, [23, [], [37, [29, [], [31]], [41, [], []]]], [47, [], [53, [], []]]]]
 next_key_bst_test = list_to_tree(figure_14_1_tree)
 next_key_bst_test.print_tree()
-
 
 print('Next key after 23: ', next_key_of_bst(next_key_bst_test, 23, None).key)
 print('Next key after 13: ', next_key_of_bst(next_key_bst_test, 13, None).key)
 TestCase.assertEqual(tester, 29, next_key_of_bst(next_key_bst_test, 23, None).key)
 TestCase.assertEqual(tester, 17, next_key_of_bst(next_key_bst_test, 13, None).key)
 
+
+def search_for_sequence(table: [list], pattern: tuple):
+    cache = {}
+    search_for_sequence.hits = 0
+    """
+    Check for the start of the pattern match in all nodes in table
+    :param table: 
+    :param pattern: 
+    :return: 
+    """
+
+    def search_for_sequence_helper(i, j, sub_pattern):
+        """
+        Check bounds
+        Base case is if the pattern is one element and the current node is that element
+        General case is Current Element == Next Pattern Element + Recurse on all positions around
+        :param i:
+        :param j:
+        :param sub_pattern:
+        :return:
+        """
+        # check cache
+        if (i, j, 11) in cache.keys():
+            search_for_sequence.hits += 1
+            return cache[(i, j, sub_pattern)]
+
+        # check boundaries
+        if i < 0 or j < 0 or j >= len(table) or i >= len(table):
+            cache[(i, j, sub_pattern)] = False
+            return False
+
+        print(i, j)
+        # base case
+        if len(sub_pattern) == 1 and table[i][j] == sub_pattern[0]:
+            cache[(i, j, sub_pattern)] = True
+            return True
+
+        # general case
+        match = table[i][j] == sub_pattern[0] and (
+                search_for_sequence_helper(i + 1, j, sub_pattern[1:]) or search_for_sequence_helper(i, j + 1,
+                                                                                                    sub_pattern[
+                                                                                                    1:])
+                or search_for_sequence_helper(i - 1, j, sub_pattern[1:]) or search_for_sequence_helper(i, j - 1,
+                                                                                                       sub_pattern[
+                                                                                                       1:]))
+        cache[(i, j, sub_pattern)] = match
+        return match
+
+    for i in range(len(table)):
+        for j in range(len(table[0])):
+            if search_for_sequence_helper(i, j, pattern):
+                return True
+
+    return False
+
+
+print()
+search_sequence_table = [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+search_sequence_pattern = (1, 3, 4, 6)
+print("Search for {} in {}: {}".format(search_sequence_pattern, search_sequence_table,
+                                       search_for_sequence(search_sequence_table, search_sequence_pattern)))
+print("Cache hits:", search_for_sequence.hits)
+search_sequence_table = [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
+search_sequence_pattern = (1, 2, 3, 4)
+print("Search for {} in {}: {}".format(search_sequence_pattern, search_sequence_table,
+                                       search_for_sequence(search_sequence_table, search_sequence_pattern)))
+print("Cache hits:", search_for_sequence.hits)
