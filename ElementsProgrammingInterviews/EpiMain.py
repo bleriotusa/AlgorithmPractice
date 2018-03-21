@@ -121,23 +121,59 @@ NOTE: None or 0 returns 0
 '''
 
 
-def football_combos(score):
-    if score <= 0:
-        return 0
+def football_combos_nodp(score):
+    twos = threes = sevens = 0
+    curr_score = score
 
-    def valid_score(sub_score):
-        return sub_score >= 0 and (sub_score % 2 == 0 or sub_score % 3 == 0 or sub_score % 7 == 0)
+    if score % 2 == 0:
+        twos += 1
 
-    return 1 + (int(score - 2 > 0) + football_combos(score - 2)) if valid_score(score - 2) else \
-        1 + (int(score - 3 > 0) + football_combos(score - 3)) if valid_score(score - 3) else \
-        1 + (int(score - 7 > 0) + football_combos(score - 7)) if valid_score(score - 7) else 0
+    while curr_score > 0:
+        if curr_score % 3 == 0:
+            threes += 1
+        curr_score -= 2
+
+    curr_score = score
+    while curr_score >= 7:
+        curr_score -= 7
+        sevens += football_combos_nodp(curr_score)
+
+    return twos + threes + sevens
 
 
-print('Football Combos WRONG')
-print('For 2 points: ', football_combos(2))
-print('For 3 points: ', football_combos(3))
-print('For 7 points: ', football_combos(7))
-print('For 12 points: ', football_combos(12))
+def football_combos_nodpe(score):
+    def twos(score):
+        return 1 if score % 2 == 0 else 0
+
+    def threes(score):
+        combos = 0
+        while score > 0:
+            if score % 3 == 0:
+                combos += 1
+            score -= 2
+        return combos
+
+    sevens = 0
+    curr_score = score
+    while curr_score >= 7:
+        curr_score -= 7
+        sevens += twos(score) + threes(score)
+
+    return twos(score) + threes(score) + sevens
+
+
+print('\nFootball Combos RIGHT')
+print('For 2 points: ', football_combos_nodp(2))
+print('For 3 points: ', football_combos_nodp(3))
+print('For 7 points: ', football_combos_nodp(7))
+print('For 9  points: ', football_combos_nodp(9))
+print('For 12 points: ', football_combos_nodp(12))
+print('For 14 points: ', football_combos_nodp(14))
+
+
+def football_combos_dp(score):
+    pass
+
 
 [5, 7, 2, 9, -2, 4, 10], 8
 [5, 7, 2, 4]
