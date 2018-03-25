@@ -1105,16 +1105,15 @@ def search_for_sequence(table: [list], pattern: tuple):
         :return:
         """
         # check cache
-        if (i, j, 11) in cache.keys():
+        if (i, j, sub_pattern) in cache.keys():
             search_for_sequence.hits += 1
             return cache[(i, j, sub_pattern)]
 
         # check boundaries
-        if i < 0 or j < 0 or j >= len(table) or i >= len(table):
+        if i < 0 or j < 0 or i >= len(table) or j >= len(table[i]):
             cache[(i, j, sub_pattern)] = False
             return False
 
-        print(i, j)
         # base case
         if len(sub_pattern) == 1 and table[i][j] == sub_pattern[0]:
             cache[(i, j, sub_pattern)] = True
@@ -1147,6 +1146,11 @@ print("Search for {} in {}: {}".format(search_sequence_pattern, search_sequence_
 print("Cache hits:", search_for_sequence.hits)
 search_sequence_table = [[1, 2, 3], [3, 4, 5], [5, 6, 7]]
 search_sequence_pattern = (1, 2, 3, 4)
+print("Search for {} in {}: {}".format(search_sequence_pattern, search_sequence_table,
+                                       search_for_sequence(search_sequence_table, search_sequence_pattern)))
+print("Cache hits:", search_for_sequence.hits)
+search_sequence_table = [[1, 2]]
+search_sequence_pattern = (1, 2)
 print("Search for {} in {}: {}".format(search_sequence_pattern, search_sequence_table,
                                        search_for_sequence(search_sequence_table, search_sequence_pattern)))
 print("Cache hits:", search_for_sequence.hits)
