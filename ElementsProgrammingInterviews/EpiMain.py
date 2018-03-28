@@ -1094,45 +1094,41 @@ def search_for_sequence(table: [list], pattern: tuple):
     :return: 
     """
 
-    def search_for_sequence_helper(i, j, sub_pattern):
+    def search_for_sequence_helper(i, j, offset):
         """
         Check bounds
         Base case is if the pattern is one element and the current node is that element
         General case is Current Element == Next Pattern Element + Recurse on all positions around
         :param i:
         :param j:
-        :param sub_pattern:
+        :param pattern[offset:]:
         :return:
         """
         # check cache
-        if (i, j, sub_pattern) in cache.keys():
+        if (i, j, offset) in cache.keys():
             search_for_sequence.hits += 1
-            return cache[(i, j, sub_pattern)]
+            return cache[(i, j, offset)]
 
         # check boundaries
         if i < 0 or j < 0 or i >= len(table) or j >= len(table[i]):
-            cache[(i, j, sub_pattern)] = False
+            cache[(i, j, offset)] = False
             return False
 
         # base case
-        if len(sub_pattern) == 1 and table[i][j] == sub_pattern[0]:
-            cache[(i, j, sub_pattern)] = True
+        if len(pattern[offset:]) == 1 and table[i][j] == pattern[offset:][0]:
+            cache[(i, j, offset)] = True
             return True
 
         # general case
-        match = table[i][j] == sub_pattern[0] and (
-                search_for_sequence_helper(i + 1, j, sub_pattern[1:]) or search_for_sequence_helper(i, j + 1,
-                                                                                                    sub_pattern[
-                                                                                                    1:])
-                or search_for_sequence_helper(i - 1, j, sub_pattern[1:]) or search_for_sequence_helper(i, j - 1,
-                                                                                                       sub_pattern[
-                                                                                                       1:]))
-        cache[(i, j, sub_pattern)] = match
+        match = table[i][j] == pattern[offset] and (
+                search_for_sequence_helper(i + 1, j, offset+1) or search_for_sequence_helper(i, j + 1, offset+1)
+                or search_for_sequence_helper(i - 1, j, offset+1) or search_for_sequence_helper(i, j - 1, offset+1))
+        cache[(i, j, offset)] = match
         return match
 
     for i in range(len(table)):
         for j in range(len(table[0])):
-            if search_for_sequence_helper(i, j, pattern):
+            if search_for_sequence_helper(i, j, 0):
                 return True
 
     return False
